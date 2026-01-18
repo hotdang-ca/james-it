@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# James-It Platform
 
-## Getting Started
+A modern, full-stack Personal Concierge platform connecting the service provider (James) with customers through real-time updates, secure communication, and live tracking.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### For the Admin (James)
+*   **CRM Dashboard**: Centralized view of all service inquiries and contacts.
+*   **Job Management**: Convert inquiries into Jobs with status tracking (`PENDING`, `SCHEDULED`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED`).
+*   **Active Jobs Command Center**:
+    *   **Live Location Broadcasting**: Share real-time GPS location with the customer during active jobs.
+    *   **Integrated Chat**: Communicate instantly with customers directly from the tracking dashboard.
+*   **Payments**: Generate unique Stripe payment links for deposits.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### For the Customer
+*   **Magic Link Portal**: Secure, password-less access via unique Job UUIDs.
+*   **Live Status**: Real-time view of job status and details.
+*   **Interactive Map**: Watch James's location in real-time on a map when the job is in progress.
+*   **Direct Chat**: Instant messaging with James for updates or questions.
+*   **Payment**: One-click access to pay deposits via Stripe.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠 Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+*   **Framework**: [Next.js 15](https://nextjs.org/) (App Router, Turbopack)
+*   **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL, RLS, Realtime)
+*   **Styling**: CSS Modules (Clean, responsive design)
+*   **Maps**: [Leaflet](https://leafletjs.com/) / React-Leaflet
+*   **Testing**: Vitest & React Testing Library
 
-## Learn More
+## 📦 Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/hotdang-ca/james-it.git
+    cd james-it
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2.  **Install dependencies**
+    ```bash
+    npm install
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3.  **Environment Setup**
+    Create a `.env.local` file with your Supabase credentials:
+    ```bash
+    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+    STRIPE_SECRET_KEY=your_stripe_key_or_mock
+    ```
 
-## Deploy on Vercel
+4.  **Database Setup**
+    Run the SQL scripts located in `supabase/schema.sql` (if you extracted them) or ensure your Supabase project has the following tables:
+    *   `contacts`
+    *   `jobs`
+    *   `messages`
+    *   `geolocation_logs`
+    
+    *Note: Ensure Realtime is enabled for `messages` and `geolocation_logs`.*
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+5.  **Run Development Server**
+    ```bash
+    npm run dev
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+    Open [http://localhost:3000](http://localhost:3000) to view the app.
+
+## 🔒 Security
+
+*   **RLS (Row Level Security)** is enforced on all tables.
+*   **Secure RPCs**: Customer data access is strictly controlled via `SECURITY DEFINER` functions, ensuring users can only access data related to their specific Job UUID.
