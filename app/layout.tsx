@@ -16,8 +16,35 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "James-It | Your Personal Concierge",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://james-it.vercel.app'),
+  title: {
+    default: "James-It | Your Personal Concierge",
+    template: "%s | James-It"
+  },
   description: "Professional courier, rides, and administrative services in Winnipeg. Reliable, distinct, and trustworthy.",
+  keywords: ["Personal Concierge", "Winnipeg", "Courier", "Rides", "Admin Services", "James-It", "Personal Shopper", "Tech Support"],
+  openGraph: {
+    title: "James-It | Your Personal Concierge",
+    description: "Professional courier, rides, and administrative services in Winnipeg. Reliable, distinct, and trustworthy.",
+    url: 'https://james-it.vercel.app',
+    siteName: 'James-It',
+    locale: 'en_CA',
+    type: 'website',
+    images: [
+      {
+        url: '/assets/james.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'James - James-It Personal Concierge',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "James-It | Your Personal Concierge",
+    description: "Professional courier, rides, and administrative services in Winnipeg.",
+    images: ['/assets/james.jpg'],
+  },
 };
 
 export default function RootLayout({
