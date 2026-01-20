@@ -23,7 +23,7 @@ export default function ChatWidget({ jobUuid, jobId, initialMessages, userRole }
     const [newMessage, setNewMessage] = useState('')
     const [sending, setSending] = useState(false)
     const messagesEndRef = useRef<HTMLDivElement>(null)
-    const supabase = createClient()
+    const [supabase] = useState(() => createClient())
 
     useEffect(() => {
         // Scroll to bottom on load and new messages

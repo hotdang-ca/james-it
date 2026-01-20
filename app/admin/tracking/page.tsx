@@ -183,7 +183,7 @@ export default function AdminTrackingPage() {
                     <ChatWidget
                         key={activeJobId}
                         jobId={activeJobId}
-                        jobUuid={jobs.find(j => j.id === activeJobId)?.customer_uuid}
+                        jobUuid={activeJobId}
                         initialMessages={messages}
                         userRole="ADMIN"
                     />

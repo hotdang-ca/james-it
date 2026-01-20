@@ -42,7 +42,8 @@ export async function createJob(contactId: string, description: string, quotedPr
     const jobData = job as any // Explicit cast to avoid 'never' on customer_uuid
 
     // 3. Trigger Notification
-    await notificationService.sendMagicLink(contactData.email, jobData.customer_uuid, contactData.name)
+    // We now use Job ID as the public identifier
+    await notificationService.sendMagicLink(contactData.email, jobData.id, contactData.name)
 
     revalidatePath('/admin')
     return { success: true, data: job }
@@ -62,5 +63,27 @@ export async function updateJobStatus(jobId: string, status: string) {
     }
 
     revalidatePath('/admin')
+    revalidatePath(`/job/${jobId}`)
+    return { success: true }
+}
+
+export async function markJobAsPaid(jobId: string, method: string) {
+    const supabase = await createClient()
+
+    const { error } = await supabase
+        .from('jobs')
+        // @ts-ignore
+        .update({
+            deposit_paid: true,
+            payment_method: method
+        })
+        .eq('id', jobId)
+
+    if (error) {
+        return { success: false, error: error.message }
+    }
+
+    revalidatePath('/admin')
+    revalidatePath(`/job/${jobId}`)
     return { success: true }
 }
