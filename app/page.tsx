@@ -348,7 +348,8 @@ export default function Home() {
             <a href="#hero">Home</a>
             <a href="#services">Services</a>
             <a href="#contact">Contact</a>
-            <a href="#">Terms of Service</a>
+            <a href="/terms">Terms of Service</a>
+            <a href="/privacy">Privacy Policy</a>
           </div>
           <p>&copy; 2026 James-It. Use with confidence.</p>
         </div>
