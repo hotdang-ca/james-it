@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Link from "next/link";
 
 export default function PrivacyPage() {
@@ -7,6 +8,7 @@ export default function PrivacyPage() {
                 <nav className="container">
                     <div className="logo"><Link href="/">James-It</Link></div>
                     <ul className="nav-links">
+                        <li><Link href="/about">About</Link></li>
                         <li><Link href="/#services">Services</Link></li>
                         <li><Link href="/#contact" className="btn btn-primary">James-it!</Link></li>
                     </ul>
@@ -66,11 +68,7 @@ export default function PrivacyPage() {
                 </div>
             </main>
 
-            <footer className="site-footer">
-                <div className="container">
-                    <p>&copy; 2026 James-It. Use with confidence.</p>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }

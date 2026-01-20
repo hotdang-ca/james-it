@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { FaCcVisa, FaCcMastercard, FaCcStripe, FaMoneyBillWave } from "react-icons/fa6";
+import Footer from "@/components/Footer";
 
 export default function Home() {
 
@@ -60,7 +61,7 @@ export default function Home() {
         <nav className="container">
           <div className="logo">James-It</div>
           <ul className="nav-links">
-            <li><a href="#about">About</a></li>
+            <li><a href="/about">About</a></li>
             <li><a href="#services">Services</a></li>
             <li><a href="#features">Features</a></li>
             <li><a href="#contact" className="btn btn-primary">James-it!</a></li>
@@ -345,20 +346,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="site-footer">
-        <div className="container">
-          <div className="footer-links">
-            <a href="#hero">Home</a>
-            <a href="#services">Services</a>
-            <a href="#contact">Contact</a>
-            <a href="/terms">Terms of Service</a>
-            <a href="/privacy">Privacy Policy</a>
-          </div>
-
-          <p>&copy; 2026 James-It. Use with confidence.</p>
-        </div>
-        <div className="container" style={{ marginTop: '2rem' }}><p><img title="Four and A Half Giraffes" src="/assets/four_and_half_giraffes_logo.png" alt="Four and A Half Giraffes" style={{ height: '24px', width: 'auto', marginRight: '0.5rem', display: 'inline-block', verticalAlign: 'middle' }} /><small>Built with ❤️ by James Perih @ <a href="https://fourandahalfgiraffes.ca/" target="_blank">Four and A Half Giraffes</a><br /><em>Building Small, Usefull tools for your Business</em></small></p></div>
-      </footer>
+      <Footer />
     </>
   );
 }
