@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import Image from "next/image";
+import { toast } from "sonner";
+import { FaCcVisa, FaCcMastercard, FaCcStripe, FaMoneyBillWave } from "react-icons/fa6";
 
 export default function Home() {
 
@@ -61,7 +63,7 @@ export default function Home() {
             <li><a href="#about">About</a></li>
             <li><a href="#services">Services</a></li>
             <li><a href="#features">Features</a></li>
-            <li><a href="#contact" className="btn btn-primary">Hire James</a></li>
+            <li><a href="#contact" className="btn btn-primary">James-it!</a></li>
           </ul>
         </nav>
       </header>
@@ -78,7 +80,7 @@ export default function Home() {
                 I provide reliable, trustworthy, and continuous assistance tailored to your needs.
               </p>
               <div className="hero-buttons">
-                <a href="#contact" className="btn btn-primary">Hire James</a>
+                <a href="#contact" className="btn btn-primary">James-it!</a>
                 <a href="#services" className="btn btn-secondary">View Services</a>
               </div>
               <div className="trust-indicators">
@@ -206,7 +208,7 @@ export default function Home() {
               </ul>
             </div>
             <div className="features-visual">
-              <img src="/assets/geo_mockup.png" alt="Live Geolocation Tracking App Mockup" className="feature-mockup" />
+              <img src="/assets/geo_mockup_popout.png" alt="Live Geolocation Tracking App Mockup" className="feature-mockup" />
               <div className="mockup-bg"></div>
             </div>
           </div>
@@ -255,21 +257,25 @@ export default function Home() {
                   <div className="contact-icon">📞</div>
                   <div>
                     <small>Phone</small>
-                    <div><a href="tel:+12045550199">(204) 555-0199</a></div>
+                    <div><a href="tel:+13065151212">(306) 515-1212</a></div>
                   </div>
                 </div>
                 <div className="contact-item">
                   <div className="contact-icon">✉️</div>
                   <div>
                     <small>Email</small>
-                    <div><a href="mailto:james@james-it.ca">james@james-it.ca</a></div>
+                    <div><a href="mailto:james@hotdang.ca">james@hotdang.ca</a></div>
                   </div>
                 </div>
 
                 <div className="payment-methods" style={{ marginTop: '2rem' }}>
                   <h4>Payment Methods</h4>
-                  <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', opacity: 0.7 }}>
-                    <span>Interac e-Transfer</span> • <span>Visa/MC</span> • <span>Cash</span>
+                  <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', opacity: 0.8, alignItems: 'center', color: '#334155' }}>
+                    <img src="/assets/interac.svg" alt="Interac" style={{ height: '24px', width: 'auto' }} />
+                    <FaCcVisa title="Visa" style={{ fontSize: '2rem' }} />
+                    <FaCcMastercard title="Mastercard" style={{ fontSize: '2rem' }} />
+                    <FaCcStripe title="Stripe" style={{ fontSize: '2rem' }} />
+                    <FaMoneyBillWave title="Cash" style={{ fontSize: '2rem' }} />
                   </div>
                 </div>
               </div>
@@ -294,13 +300,13 @@ export default function Home() {
                   const result = await response.json();
 
                   if (response.ok) {
-                    alert('Thanks for reaching out! Your message has been saved.');
+                    toast.success('Thanks for reaching out! Your message has been saved.');
                     form.reset();
                   } else {
-                    alert('Error: ' + result.error);
+                    toast.error('Error: ' + result.error);
                   }
                 } catch (error) {
-                  alert('Something went wrong. Please try again.');
+                  toast.error('Something went wrong. Please try again.');
                 }
               }}>
 

@@ -50,6 +50,8 @@ export interface Database {
                     end_time_est: string | null
                     stripe_payment_link: string | null
                     customer_uuid: string | null
+                    deposit_paid: boolean | null // boolean but nullable in DB if not set default? we set default false.
+                    payment_method: string | null
                 }
                 Insert: {
                     id?: string
@@ -62,6 +64,8 @@ export interface Database {
                     end_time_est?: string | null
                     stripe_payment_link?: string | null
                     customer_uuid?: string | null
+                    deposit_paid?: boolean | null
+                    payment_method?: string | null
                 }
                 Update: {
                     id?: string
@@ -74,6 +78,8 @@ export interface Database {
                     end_time_est?: string | null
                     stripe_payment_link?: string | null
                     customer_uuid?: string | null
+                    deposit_paid?: boolean | null
+                    payment_method?: string | null
                 }
             }
             messages: {
@@ -123,6 +129,41 @@ export interface Database {
                     job_id?: string | null
                     latitude?: number
                     longitude?: number
+                }
+            }
+            payment_requests: {
+                Row: {
+                    id: string
+                    created_at: string
+                    job_id: string
+                    amount: number
+                    description: string | null
+                    stripe_payment_link: string | null
+                    stripe_session_id: string | null
+                    status: string | null
+                    payment_method: string | null
+                }
+                Insert: {
+                    id?: string
+                    created_at?: string
+                    job_id: string
+                    amount: number
+                    description?: string | null
+                    stripe_payment_link?: string | null
+                    stripe_session_id?: string | null
+                    status?: string | null
+                    payment_method?: string | null
+                }
+                Update: {
+                    id?: string
+                    created_at?: string
+                    job_id?: string
+                    amount?: number
+                    description?: string | null
+                    stripe_payment_link?: string | null
+                    stripe_session_id?: string | null
+                    status?: string | null
+                    payment_method?: string | null
                 }
             }
         }

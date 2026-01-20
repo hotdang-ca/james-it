@@ -6,18 +6,7 @@ import { useEffect, useState } from 'react'
 import L from 'leaflet'
 
 // Fix Leaflet marker icons in Next.js
-// @ts-ignore
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: '/assets/marker-icon-2x.png',
-    iconUrl: '/assets/marker-icon.png',
-    shadowUrl: '/assets/marker-shadow.png',
-});
-
-// Since we don't have these assets locally yet, we might see broken icons unless we pull them or use CDN.
-// For now, let's use a simple DivIcon or rely on CDN in <head> if possible. 
-// Actually, let's just assume standard setup or broken icon for a moment while we get logic right.
-// Or we can use a circle marker for simplicity.
+// We moved this inside the component to avoid global side-effects during SSR or module eval
 
 function MapUpdater({ center }: { center: [number, number] }) {
     const map = useMap()
@@ -39,6 +28,15 @@ export default function MapComponent({ logs }: MapComponentProps) {
     const [currentLog, setCurrentLog] = useState(logs[logs.length - 1])
 
     useEffect(() => {
+        // Fix Leaflet icons
+        // @ts-ignore
+        delete L.Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+            iconRetinaUrl: '/assets/marker-icon-2x.png',
+            iconUrl: '/assets/marker-icon.png',
+            shadowUrl: '/assets/marker-shadow.png',
+        });
+
         if (logs.length > 0) {
             setSliderValue(logs.length - 1)
             setCurrentLog(logs[logs.length - 1])
