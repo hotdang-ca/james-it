@@ -772,3 +772,27 @@ img {
         grid-template-columns: 1fr;
     }
 }
+
+@media print {
+    .print-hidden {
+        display: none !important;
+    }
+
+    header,
+    nav,
+    footer,
+    .site-header,
+    .site-footer {
+        display: none !important;
+    }
+
+    body {
+        background-color: white !important;
+    }
+
+    main {
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}

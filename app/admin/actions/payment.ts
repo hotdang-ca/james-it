@@ -4,10 +4,10 @@ import { createClient } from '@/utils/supabase/server'
 import { stripeService } from '@/lib/payments/stripe'
 import { revalidatePath } from 'next/cache'
 
-export async function createPaymentRequest(jobId: string, amount: number, description: string) {
+export async function createPaymentRequest(jobId: string, amount: number, description: string, method: string = 'STRIPE') {
     const supabase = await createClient()
 
-    // 1. Fetch Job Details
+    // 1. Fetch Job Details (only needed for Stripe or validation)
     const { data: jobData, error: fetchError } = await supabase
         .from('jobs')
         .select('customer_uuid')
@@ -20,22 +20,33 @@ export async function createPaymentRequest(jobId: string, amount: number, descri
         return { success: false, error: 'Job not found' }
     }
 
-    // 2. Generate Link via Stripe Service
-    let result = { url: '', sessionId: '' }
-    try {
-        result = await stripeService.createPaymentLink(
-            jobId,
-            amount,
-            description,
-            job.customer_uuid || ''
-        )
-    } catch (e: any) {
-        return { success: false, error: 'Stripe Error: ' + e.message }
-    }
+    let stripeUrl = null
+    let stripeSessionId = null
+    let status = 'PENDING'
 
-    if (!result.url) {
-        return { success: false, error: 'Failed to generate Stripe Payment Link (Empty URL returned).' }
+    // 2. Handle Method Logic
+    if (method === 'STRIPE') {
+        // Generate Link via Stripe Service
+        try {
+            const result = await stripeService.createPaymentLink(
+                jobId,
+                amount,
+                description,
+                job.customer_uuid || ''
+            )
+            stripeUrl = result.url
+            stripeSessionId = result.sessionId
+        } catch (e: any) {
+            return { success: false, error: 'Stripe Error: ' + e.message }
+        }
+
+        if (!stripeUrl) {
+            return { success: false, error: 'Failed to generate Stripe Payment Link (Empty URL returned).' }
+        }
+    } else if (method === 'CASH' || method === 'E_TRANSFER_RECEIVED') {
+        status = 'PAID'
     }
+    // method === 'E_TRANSFER_PENDING' stays PENDING with no stripe link
 
     // 3. Create Payment Request Record
     const { error: insertError } = await supabase
@@ -45,10 +56,10 @@ export async function createPaymentRequest(jobId: string, amount: number, descri
             job_id: jobId,
             amount: amount,
             description: description,
-            stripe_payment_link: result.url,
-            stripe_session_id: result.sessionId,
-            status: 'PENDING',
-            payment_method: 'STRIPE'
+            stripe_payment_link: stripeUrl,
+            stripe_session_id: stripeSessionId,
+            status: status,
+            payment_method: method
         })
 
     if (insertError) {
@@ -57,6 +68,20 @@ export async function createPaymentRequest(jobId: string, amount: number, descri
 
     revalidatePath('/admin')
     revalidatePath(`/job/${jobId}`)
+    return { success: true }
+}
+
+export async function markPaymentAsPaid(requestId: string) {
+    const supabase = await createClient()
+    const { error } = await supabase
+        .from('payment_requests')
+        // @ts-ignore
+        .update({ status: 'PAID' })
+        .eq('id', requestId)
+
+    if (error) return { success: false, error: error.message }
+
+    revalidatePath('/admin')
     return { success: true }
 }
 
