@@ -11,7 +11,7 @@ export default function ReceiptView({ job, paymentRequests }: ReceiptViewProps) 
     const due = quoted - paid;
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto', backgroundColor: 'white', padding: '3rem', borderRadius: '0.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', minHeight: '800px', color: '#1E293B' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', minHeight: '800px', color: '#1E293B' }}>
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3rem' }}>
                 <div>
@@ -103,7 +103,7 @@ export default function ReceiptView({ job, paymentRequests }: ReceiptViewProps) 
             )}
 
             {/* Actions */}
-            <div className="print:hidden" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4rem', paddingTop: '2rem', borderTop: '1px dashed #CBD5E1' }}>
+            <div className="print-hidden" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4rem', paddingTop: '2rem', borderTop: '1px dashed #CBD5E1', flexWrap: 'wrap', gap: '1rem' }}>
                 <button
                     onClick={() => window.print()}
                     style={{ color: '#64748B', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', background: 'none', border: 'none', fontSize: '0.875rem', fontWeight: 600 }}>
@@ -111,7 +111,7 @@ export default function ReceiptView({ job, paymentRequests }: ReceiptViewProps) 
                 </button>
 
                 {/* Show Pending Payment Links */}
-                <div style={{ display: 'flex', gap: '1rem' }}>
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     {paymentRequests?.filter((r: any) => r.status !== 'PAID' && r.stripe_payment_link).map((req: any) => (
                         <a
                             key={req.id}
@@ -128,13 +128,7 @@ export default function ReceiptView({ job, paymentRequests }: ReceiptViewProps) 
                 </div>
             </div>
 
-            <style jsx global>{`
-                @media print {
-                    .print\\:hidden { display: none !important; }
-                    body { background-color: white !important; }
-                    main { box-shadow: none !important; margin: 0 !important; padding: 0 !important; }
-                }
-            `}</style>
+            {/* Styles are now handled globally, but keeping scoped override if needed */}
         </div>
     )
 }

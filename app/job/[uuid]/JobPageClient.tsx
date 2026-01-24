@@ -45,7 +45,7 @@ export default function JobPageClient({
                 </div>
 
                 {/* View Toggle */}
-                <div className="print:hidden" style={{ display: 'flex', backgroundColor: '#F1F5F9', padding: '0.25rem', borderRadius: '0.5rem' }}>
+                <div className="print-hidden" style={{ display: 'flex', backgroundColor: '#F1F5F9', padding: '0.25rem', borderRadius: '0.5rem' }}>
                     <button
                         onClick={() => setViewMode('TRACKER')}
                         style={{
@@ -72,7 +72,7 @@ export default function JobPageClient({
             </header>
 
             {/* Notifications */}
-            <div className="print:hidden" style={{ maxWidth: '800px', margin: '0 auto 1.5rem auto' }}>
+            <div className="print-hidden" style={{ maxWidth: '800px', margin: '0 auto 1.5rem auto' }}>
                 {paymentSuccess && (
                     <div style={{ backgroundColor: '#DCFCE7', color: '#166534', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #BBF7D0', fontWeight: 600, textAlign: 'center', marginBottom: '1rem' }}>
                         ✅ Payment Successful! Thank you.
@@ -99,13 +99,6 @@ export default function JobPageClient({
                     paymentRequests={paymentRequests}
                 />
             )}
-
-            <style jsx global>{`
-                @media print {
-                    .print\\:hidden { display: none !important; }
-                    header { display: none !important; } /* Hide main app header, ReceiptView has its own */
-                }
-            `}</style>
         </div>
     )
 }

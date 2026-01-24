@@ -114,7 +114,7 @@ export default function ContactDetailClient({ contact }: ContactDetailClientProp
                                     </select>
                                 </div>
 
-                                <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', backgroundColor: '#F8FAFC', padding: '1rem', borderRadius: '0.5rem' }}>
+                                <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', backgroundColor: '#F8FAFC', padding: '1rem', borderRadius: '0.5rem', flexWrap: 'wrap' }}>
                                     {/* Financials */}
                                     {(() => {
                                         const quoted = parseFloat(job.quoted_price) || 0;
