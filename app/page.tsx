@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { FaCcVisa, FaCcMastercard, FaCcStripe, FaMoneyBillWave } from "react-icons/fa6";
 import Footer from "@/components/Footer";
 
 export default function Home() {
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     // Smooth scrolling for navigation links
@@ -284,63 +285,77 @@ export default function Home() {
                 </div>
               </div>
 
-              <form className="contact-form" onSubmit={async (e) => {
-                e.preventDefault();
-                const form = e.target as HTMLFormElement;
-                const formData = {
-                  name: (form.elements.namedItem('name') as HTMLInputElement).value,
-                  email: (form.elements.namedItem('email') as HTMLInputElement).value,
-                  service_interest: (form.elements.namedItem('service') as HTMLSelectElement).value,
-                  message: (form.elements.namedItem('message') as HTMLTextAreaElement).value
-                };
+              {isSubmitted ? (
+                <div style={{ backgroundColor: '#F0FDF4', padding: '2rem', borderRadius: '1rem', border: '1px solid #BBF7D0', textAlign: 'center' }}>
+                  <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
+                  <h3 style={{ color: '#166534', marginBottom: '0.5rem' }}>Message Sent!</h3>
+                  <p style={{ color: '#15803D', marginBottom: '1.5rem' }}>Thanks for reaching out. I'll get back to you shortly.</p>
+                  <button onClick={() => setIsSubmitted(false)} className="btn btn-secondary" style={{ fontSize: '0.875rem' }}>
+                    Send Another Message
+                  </button>
+                </div>
+              ) : (
+                <form className="contact-form" onSubmit={async (e) => {
+                  e.preventDefault();
+                  const form = e.target as HTMLFormElement;
+                  const formData = {
+                    name: (form.elements.namedItem('name') as HTMLInputElement).value,
+                    email: (form.elements.namedItem('email') as HTMLInputElement).value,
+                    service_interest: (form.elements.namedItem('service') as HTMLSelectElement).value,
+                    message: (form.elements.namedItem('message') as HTMLTextAreaElement).value
+                  };
 
-                try {
-                  const response = await fetch('/api/contact', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                  });
+                  try {
+                    const response = await fetch('/api/contact', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(formData)
+                    });
 
-                  const result = await response.json();
+                    const result = await response.json();
 
-                  if (response.ok) {
-                    toast.success('Thanks for reaching out! Your message has been saved.');
-                    form.reset();
-                  } else {
-                    toast.error('Error: ' + result.error);
+                    if (response.ok) {
+                      setIsSubmitted(true);
+                      window.scrollTo({ top: document.getElementById('contact')?.offsetTop ? document.getElementById('contact')!.offsetTop - 100 : 0, behavior: 'smooth' });
+                    } else {
+                      toast.error('Error: ' + result.error);
+                    }
+                  } catch (error) {
+                    toast.error('Something went wrong. Please try again.');
                   }
-                } catch (error) {
-                  toast.error('Something went wrong. Please try again.');
-                }
-              }}>
-
-                <div className="form-group">
-                  <label htmlFor="name">Name</label>
-                  <input type="text" id="name" placeholder="Your Name" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="email">Email</label>
-                  <input type="email" id="email" placeholder="your@email.com" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="service">Service Interest</label>
-                  <select id="service" defaultValue="">
-                    <option value="" disabled>Select a service...</option>
-                    <option value="courier">Courier Delivery</option>
-                    <option value="rides">Private Rides</option>
-                    <option value="admin">Admin / Data Entry</option>
-                    <option value="tech">Tech / Programming</option>
-                    <option value="shopping">Personal Shopping</option>
-                    <option value="yard">Yard Work</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="message">Message</label>
-                  <textarea id="message" rows={4} placeholder="How can I help you?"></textarea>
-                </div>
-                <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>Send Message</button>
-              </form>
+                }}>
+                  <div>
+                    <h2>No Obligation Quote</h2>
+                    <p>Fill out the form below and I'll get back to you as soon as possible.</p>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="name">Name</label>
+                    <input type="text" id="name" placeholder="Your Name" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input type="email" id="email" placeholder="your@email.com" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="service">Service Interest</label>
+                    <select id="service" defaultValue="">
+                      <option value="" disabled>Select a service...</option>
+                      <option value="courier">Courier Delivery</option>
+                      <option value="rides">Private Rides</option>
+                      <option value="admin">Admin / Data Entry</option>
+                      <option value="tech">Tech / Programming</option>
+                      <option value="shopping">Personal Shopping</option>
+                      <option value="yard">Yard Work</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="message">Message</label>
+                    <textarea id="message" rows={4} placeholder="How can I help you?"></textarea>
+                  </div>
+                  <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>Send Message</button>
+                </form>
+              )}
             </div>
           </div>
         </section>
