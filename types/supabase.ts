@@ -52,6 +52,7 @@ export interface Database {
                     customer_uuid: string | null
                     deposit_paid: boolean | null // boolean but nullable in DB if not set default? we set default false.
                     payment_method: string | null
+                    completed_at: string | null
                 }
                 Insert: {
                     id?: string
@@ -66,6 +67,7 @@ export interface Database {
                     customer_uuid?: string | null
                     deposit_paid?: boolean | null
                     payment_method?: string | null
+                    completed_at?: string | null
                 }
                 Update: {
                     id?: string
@@ -80,6 +82,7 @@ export interface Database {
                     customer_uuid?: string | null
                     deposit_paid?: boolean | null
                     payment_method?: string | null
+                    completed_at?: string | null
                 }
             }
             messages: {
