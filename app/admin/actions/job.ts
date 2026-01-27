@@ -52,10 +52,18 @@ export async function createJob(contactId: string, description: string, quotedPr
 export async function updateJobStatus(jobId: string, status: string) {
     const supabase = await createClient()
 
+    const updateData: any = { status }
+
+    if (status === 'COMPLETED') {
+        updateData.completed_at = new Date().toISOString()
+    } else {
+        updateData.completed_at = null
+    }
+
     const { error } = await supabase
         .from('jobs')
         // @ts-ignore
-        .update({ status })
+        .update(updateData)
         .eq('id', jobId)
 
     if (error) {
