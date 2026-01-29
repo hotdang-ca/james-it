@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/admin'
 import { Database } from '@/types/supabase'
 
 type Job = Database['public']['Tables']['jobs']['Row']
@@ -47,7 +48,14 @@ export async function getJobGeolocation(uuid: string): Promise<GeoLog[]> {
     return (data as unknown as GeoLog[]) || []
 }
 
-export async function sendMessage(jobUuid: string, content: string, senderRole: 'CUSTOMER' | 'ADMIN') {
+export async function sendMessage(
+    jobUuid: string,
+    content: string,
+    senderRole: 'CUSTOMER' | 'ADMIN',
+    attachmentUrl?: string,
+    attachmentType?: string,
+    attachmentName?: string
+) {
     const supabase = await createClient()
 
     // 1. Verify existence and get ID
@@ -61,7 +69,10 @@ export async function sendMessage(jobUuid: string, content: string, senderRole: 
             job_id: job.id,
             sender_role: senderRole,
             content,
-            is_read: false
+            is_read: false,
+            attachment_url: attachmentUrl,
+            attachment_type: attachmentType,
+            attachment_name: attachmentName
         } as any)
         .select()
         .single()
@@ -72,4 +83,32 @@ export async function sendMessage(jobUuid: string, content: string, senderRole: 
     }
 
     return { success: true, data }
+}
+
+export async function uploadFile(formData: FormData) {
+    const supabase = createAdminClient()
+    const file = formData.get('file') as File
+
+    if (!file) {
+        return { success: false, error: 'No file received' }
+    }
+
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+    const filePath = `${fileName}`
+
+    const { error: uploadError } = await supabase.storage
+        .from('chat-attachments')
+        .upload(filePath, file)
+
+    if (uploadError) {
+        console.error('Upload Error:', uploadError)
+        return { success: false, error: uploadError.message }
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+        .from('chat-attachments')
+        .getPublicUrl(filePath)
+
+    return { success: true, url: publicUrl, name: file.name, type: file.type }
 }

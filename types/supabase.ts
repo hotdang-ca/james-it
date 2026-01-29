@@ -93,6 +93,9 @@ export interface Database {
                     sender_role: string
                     content: string
                     is_read: boolean | null
+                    attachment_url: string | null
+                    attachment_type: string | null
+                    attachment_name: string | null
                 }
                 Insert: {
                     id?: string
@@ -101,6 +104,9 @@ export interface Database {
                     sender_role: string
                     content: string
                     is_read?: boolean | null
+                    attachment_url?: string | null
+                    attachment_type?: string | null
+                    attachment_name?: string | null
                 }
                 Update: {
                     id?: string
@@ -109,6 +115,9 @@ export interface Database {
                     sender_role?: string
                     content?: string
                     is_read?: boolean | null
+                    attachment_url?: string | null
+                    attachment_type?: string | null
+                    attachment_name?: string | null
                 }
             }
             geolocation_logs: {
