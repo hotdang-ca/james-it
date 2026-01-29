@@ -33,7 +33,10 @@ create table messages (
   job_id uuid references jobs(id),
   sender_role text not null, -- 'ADMIN' or 'CUSTOMER'
   content text not null,
-  is_read boolean default false
+  is_read boolean default false,
+  attachment_url text,
+  attachment_type text,
+  attachment_name text
 );
 
 -- Geolocation Logs Table
