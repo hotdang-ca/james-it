@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "James-It | Your Personal Concierge",
     description: "Professional courier, rides, and administrative services in Winnipeg. Reliable, distinct, and trustworthy.",
-    url: 'https://james-it.vercel.app',
+    url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://james-it.vercel.app'}`,
     siteName: 'James-It',
     locale: 'en_CA',
     type: 'website',
