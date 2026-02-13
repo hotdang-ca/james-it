@@ -53,8 +53,7 @@ export async function createInvoice(contactId: string, jobIds: string[], dueDate
         const totalAmount = jobs.reduce((sum: number, job: any) => sum + (job.quoted_price || 0), 0)
         const { notificationService } = await import('@/lib/notifications/service')
 
-        // @ts-ignore
-        await notificationService.notificationService.sendInvoice(contact.email, newInvoice.id, contact.name, totalAmount)
+        await notificationService.sendInvoice(contact.email, newInvoice.id, contact.name, totalAmount)
     }
 
     return { success: true, invoiceId: newInvoice.id }

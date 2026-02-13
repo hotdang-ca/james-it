@@ -29,9 +29,8 @@ export default function InvoiceReceiptView({ invoice }: InvoiceReceiptViewProps)
                 <div>
                     <h1 style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.025em', marginBottom: '0.5rem' }}>JAMES-IT</h1>
                     <div style={{ color: '#64748B', fontSize: '0.875rem', lineHeight: '1.5' }}>
-                        Wpg, MB<br />
                         Winnipeg, Manitoba<br />
-                        james@james-it.ca
+                        james@hotdang.ca
                     </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
@@ -152,7 +151,7 @@ export default function InvoiceReceiptView({ invoice }: InvoiceReceiptViewProps)
             <div className="print-hidden" style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: '#F8FAFC', borderRadius: '0.5rem', border: '1px solid #E2E8F0', fontSize: '0.875rem' }}>
                 <h4 style={{ fontWeight: 600, marginBottom: '0.5rem', color: '#1E293B' }}>Payment Options</h4>
                 <div style={{ color: '#475569', lineHeight: '1.6' }}>
-                    <p style={{ marginBottom: '0.5rem' }}><strong>e-Transfer:</strong> Please send to <span style={{ color: '#1E293B', fontWeight: 600 }}>james@james-it.ca</span> (Auto-deposit enabled).</p>
+                    <p style={{ marginBottom: '0.5rem' }}><strong>e-Transfer:</strong> Please send to <span style={{ color: '#1E293B', fontWeight: 600 }}>james@hotdang.ca</span> (Auto-deposit enabled).</p>
                     <p><strong>Credit Card:</strong> Click the "Pay Balance" button above (securely processed via Stripe).</p>
                 </div>
             </div>

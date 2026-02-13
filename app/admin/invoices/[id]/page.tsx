@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
 import InvoiceDetailClient from './page.client'
 
+
 export default async function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
     const supabase = await createClient()
@@ -18,6 +19,18 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
         .single()
 
     const invoice: any = invoiceRaw
+
+    // we need to get the payment requests for the jobs as well, and apply them to the invoice.jobs
+    const { data: jobPaymentRequests, error: jobPaymentRequestsError } = await supabase
+        .from('payment_requests')
+        .select('*')
+        .in('job_id', invoice.jobs.map((j: any) => j.id))
+
+    if (jobPaymentRequests) {
+        invoice.jobs.forEach((job: any) => {
+            job.payment_requests = jobPaymentRequests.filter((r: any) => r.job_id === job.id)
+        })
+    }
 
     if (error || !invoice) {
         notFound()

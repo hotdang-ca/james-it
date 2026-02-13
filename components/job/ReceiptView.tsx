@@ -17,9 +17,8 @@ export default function ReceiptView({ job, paymentRequests }: ReceiptViewProps) 
                 <div>
                     <h1 style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.025em', marginBottom: '0.5rem' }}>JAMES-IT</h1>
                     <div style={{ color: '#64748B', fontSize: '0.875rem', lineHeight: '1.5' }}>
-                        Wpg, MB<br />
                         Winnipeg, Manitoba<br />
-                        james@james-it.ca
+                        james@hotdang.ca
                     </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>

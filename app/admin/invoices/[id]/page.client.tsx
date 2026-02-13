@@ -16,11 +16,20 @@ export default function InvoiceDetailClient({ invoice }: InvoiceDetailClientProp
     const router = useRouter()
 
     const jobsTotal = invoice.jobs?.reduce((sum: number, job: any) => sum + (parseFloat(job.quoted_price) || 0), 0) || 0
-    const paidTotal = invoice.payment_requests?.filter((r: any) => r.status === 'PAID').reduce((sum: number, r: any) => sum + (parseFloat(r.amount) || 0), 0) || 0
+
+    // Calculate all payments (Invoice-level + Job-level PAID)
+    const invoiceRequests = invoice.payment_requests || []
+    const jobPaidRequests = invoice.jobs?.flatMap((j: any) => j.payment_requests || []).filter((r: any) => r.status === 'PAID') || []
+
+    const allRequestsToShow = [...invoiceRequests, ...jobPaidRequests].filter((v: any, i: number, a: any[]) => a.findIndex((t: any) => t.id === v.id) === i)
+    allRequestsToShow.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+    const paidTotal = allRequestsToShow.filter((r: any) => r.status === 'PAID').reduce((sum: number, r: any) => sum + (parseFloat(r.amount) || 0), 0) || 0
+
     const balanceDue = jobsTotal - paidTotal
     const isFullyPaid = balanceDue <= 0.01
 
-    const magicLink = `${window.location.origin}/invoice/${invoice.id}`
+    const magicLink = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/invoice/${invoice.id}`
 
     async function handleDelete() {
         if (confirm('Are you sure you want to delete this invoice? Jobs will be unlinked but not deleted.')) {
@@ -162,8 +171,8 @@ export default function InvoiceDetailClient({ invoice }: InvoiceDetailClientProp
                             )}
                         </div>
                         <div>
-                            {invoice.payment_requests && invoice.payment_requests.length > 0 ? (
-                                invoice.payment_requests.map((req: any) => (
+                            {allRequestsToShow.length > 0 ? (
+                                allRequestsToShow.map((req: any) => (
                                     <div key={req.id} style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #E2E8F0' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
                                             <div style={{ fontWeight: 600, color: req.status === 'PAID' ? '#166534' : '#334155' }}>${req.amount}</div>
@@ -171,7 +180,10 @@ export default function InvoiceDetailClient({ invoice }: InvoiceDetailClientProp
                                                 {req.status}
                                             </div>
                                         </div>
-                                        <div style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '0.5rem' }}>{req.description}</div>
+                                        <div style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '0.5rem' }}>
+                                            {req.invoice_id ? '' : <strong>(Job) </strong>}
+                                            {req.description}
+                                        </div>
                                         <div style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <span>{req.payment_method === 'STRIPE' ? 'Stripe' : 'Manual'} • {new Date(req.created_at).toLocaleDateString()}</span>
 
