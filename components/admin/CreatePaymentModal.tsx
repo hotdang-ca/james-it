@@ -4,12 +4,13 @@ import { useState } from 'react'
 import { createPaymentRequest } from '@/app/admin/actions/payment'
 
 interface CreatePaymentModalProps {
-    jobId: string
+    targetId: string // jobId or invoiceId
+    isInvoice?: boolean
     isOpen: boolean
     onClose: () => void
 }
 
-export default function CreatePaymentModal({ jobId, isOpen, onClose }: CreatePaymentModalProps) {
+export default function CreatePaymentModal({ targetId, isInvoice = false, isOpen, onClose }: CreatePaymentModalProps) {
     const [amount, setAmount] = useState('')
     const [description, setDescription] = useState('Balance Payment')
     const [method, setMethod] = useState('STRIPE')
@@ -28,7 +29,7 @@ export default function CreatePaymentModal({ jobId, isOpen, onClose }: CreatePay
             return
         }
 
-        const res = await createPaymentRequest(jobId, parseFloat(amount), description, method)
+        const res = await createPaymentRequest(targetId, parseFloat(amount), description, method, isInvoice)
 
         setLoading(false)
         if (res.success) {

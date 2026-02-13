@@ -46,19 +46,34 @@ export default async function JobPage({
     const sessionId = qp?.session_id as string
 
     // Fetch in parallel
+    // Fetch in parallel
     const jobReq = getJobByUuid(uuid)
     const messagesReq = getJobMessages(uuid)
     const geoReq = getJobGeolocation(uuid)
     const paymentsReq = getPaymentRequests(uuid)
 
-    const [job, initialMessages, geoLogs, paymentRequests] = await Promise.all([jobReq, messagesReq, geoReq, paymentsReq])
+    const [job, initialMessages, geoLogs, jobPayments] = await Promise.all([jobReq, messagesReq, geoReq, paymentsReq])
+
+    let allPayments = jobPayments || []
+
+    // If job belongs to an invoice, fetch invoice payments too
+    if (job?.invoice_id) {
+        const { getInvoice } = await import('@/app/admin/actions/invoice')
+        const invoice = await getInvoice(job.invoice_id)
+        if (invoice) {
+            // Add invoice level payments
+            const inv: any = invoice
+            const invoicePayments = inv.payment_requests?.filter((r: any) => r.status === 'PAID') || []
+            allPayments = [...allPayments, ...invoicePayments].filter((v, i, a) => a.findIndex(t => t.id === v.id) === i)
+        }
+    }
 
     if (!job) return notFound()
 
     return (
         <JobPageClient
             job={job}
-            paymentRequests={paymentRequests}
+            paymentRequests={allPayments}
             geoLogs={geoLogs}
             initialMessages={initialMessages as any[]}
             uuid={uuid}
