@@ -23,22 +23,41 @@ export async function createInvoice(contactId: string, jobIds: string[], dueDate
         return { success: false, error: invoiceError.message }
     }
 
+    const newInvoice: any = invoice
+
     // 2. Link Jobs to Invoice
     const { error: jobsError } = await supabase
         .from('jobs')
         // @ts-ignore
-        .update({ invoice_id: invoice.id })
+        .update({ invoice_id: newInvoice.id })
         .in('id', jobIds)
 
     if (jobsError) {
         // Rollback? ideally yes, but for now just return error. 
         // Realistically we might want to delete the invoice if this fails.
-        await supabase.from('invoices').delete().eq('id', invoice.id)
+        await supabase.from('invoices').delete().eq('id', newInvoice.id)
         return { success: false, error: jobsError.message }
     }
 
     revalidatePath(`/admin/contacts/${contactId}`)
-    return { success: true, invoiceId: invoice.id }
+
+    // 3. Send Notification
+    // Fetch Contact & Jobs to get details for email
+    const { data: contactRaw } = await supabase.from('contacts').select('name, email').eq('id', contactId).single()
+    const { data: jobsRaw } = await supabase.from('jobs').select('quoted_price').in('id', jobIds)
+
+    const contact: any = contactRaw
+    const jobs: any = jobsRaw
+
+    if (contact && contact.email && jobs) {
+        const totalAmount = jobs.reduce((sum: number, job: any) => sum + (job.quoted_price || 0), 0)
+        const { notificationService } = await import('@/lib/notifications/service')
+
+        // @ts-ignore
+        await notificationService.notificationService.sendInvoice(contact.email, newInvoice.id, contact.name, totalAmount)
+    }
+
+    return { success: true, invoiceId: newInvoice.id }
 }
 
 export async function getInvoice(invoiceId: string) {

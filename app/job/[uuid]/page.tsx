@@ -46,7 +46,6 @@ export default async function JobPage({
     const sessionId = qp?.session_id as string
 
     // Fetch in parallel
-    // Fetch in parallel
     const jobReq = getJobByUuid(uuid)
     const messagesReq = getJobMessages(uuid)
     const geoReq = getJobGeolocation(uuid)
@@ -54,7 +53,7 @@ export default async function JobPage({
 
     const [job, initialMessages, geoLogs, jobPayments] = await Promise.all([jobReq, messagesReq, geoReq, paymentsReq])
 
-    let allPayments = jobPayments || []
+    let allPayments: any[] = jobPayments || []
 
     // If job belongs to an invoice, fetch invoice payments too
     if (job?.invoice_id) {
