@@ -13,7 +13,8 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
             jobs (
                 *,
                 payment_requests (*)
-            )
+            ),
+            invoices (*)
         `)
         .eq('id', id)
         .single()

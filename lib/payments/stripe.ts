@@ -10,11 +10,11 @@ export class StripeService {
         })
     }
 
-    async createPaymentLink(jobId: string, amount: number, description: string, customerUuid: string): Promise<{ url: string, sessionId: string }> {
+    async createPaymentLink(targetId: string, amount: number, description: string, customerUuid: string, isInvoice: boolean = false): Promise<{ url: string, sessionId: string }> {
         if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'mock_key') {
-            console.log(`[Stripe Mock] Creating payment link for Job ${jobId}, Amount: $${amount}`)
+            console.log(`[Stripe Mock] Creating payment link for ${isInvoice ? 'Invoice' : 'Job'} ${targetId}, Amount: $${amount}`)
             return {
-                url: `https://checkout.stripe.com/mock/${jobId}?amount=${amount}`,
+                url: `https://checkout.stripe.com/mock/${targetId}?amount=${amount}`,
                 sessionId: `mock_session_${Date.now()}`
             }
         }
@@ -24,6 +24,8 @@ export class StripeService {
             if (!baseUrl.startsWith('http')) {
                 baseUrl = `https://${baseUrl}`
             }
+
+            const returnPath = isInvoice ? 'invoice' : 'job';
 
             const session = await this.stripe.checkout.sessions.create({
                 payment_method_types: ['card'],
@@ -40,10 +42,11 @@ export class StripeService {
                     },
                 ],
                 mode: 'payment',
-                success_url: `${baseUrl}/job/${jobId}?payment_success=true&session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `${baseUrl}/job/${jobId}?payment_cancelled=true`,
+                success_url: `${baseUrl}/${returnPath}/${targetId}?payment_success=true&session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `${baseUrl}/${returnPath}/${targetId}?payment_cancelled=true`,
                 metadata: {
-                    jobId: jobId,
+                    targetId: targetId,
+                    type: isInvoice ? 'invoice' : 'job',
                     customerUuid: customerUuid
                 }
             })

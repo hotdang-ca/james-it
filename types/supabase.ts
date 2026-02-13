@@ -38,6 +38,32 @@ export interface Database {
                     status?: string | null
                 }
             }
+            invoices: {
+                Row: {
+                    id: string
+                    created_at: string
+                    contact_id: string | null
+                    description: string | null
+                    due_date: string | null
+                    status: string | null
+                }
+                Insert: {
+                    id?: string
+                    created_at?: string
+                    contact_id?: string | null
+                    description?: string | null
+                    due_date?: string | null
+                    status?: string | null
+                }
+                Update: {
+                    id?: string
+                    created_at?: string
+                    contact_id?: string | null
+                    description?: string | null
+                    due_date?: string | null
+                    status?: string | null
+                }
+            }
             jobs: {
                 Row: {
                     id: string
@@ -53,6 +79,7 @@ export interface Database {
                     deposit_paid: boolean | null // boolean but nullable in DB if not set default? we set default false.
                     payment_method: string | null
                     completed_at: string | null
+                    invoice_id: string | null
                 }
                 Insert: {
                     id?: string
@@ -68,6 +95,7 @@ export interface Database {
                     deposit_paid?: boolean | null
                     payment_method?: string | null
                     completed_at?: string | null
+                    invoice_id?: string | null
                 }
                 Update: {
                     id?: string
@@ -83,6 +111,7 @@ export interface Database {
                     deposit_paid?: boolean | null
                     payment_method?: string | null
                     completed_at?: string | null
+                    invoice_id?: string | null
                 }
             }
             messages: {
@@ -147,35 +176,38 @@ export interface Database {
                 Row: {
                     id: string
                     created_at: string
-                    job_id: string
+                    job_id: string | null
                     amount: number
                     description: string | null
                     stripe_payment_link: string | null
                     stripe_session_id: string | null
                     status: string | null
                     payment_method: string | null
+                    invoice_id: string | null
                 }
                 Insert: {
                     id?: string
                     created_at?: string
-                    job_id: string
+                    job_id?: string | null
                     amount: number
                     description?: string | null
                     stripe_payment_link?: string | null
                     stripe_session_id?: string | null
                     status?: string | null
                     payment_method?: string | null
+                    invoice_id?: string | null
                 }
                 Update: {
                     id?: string
                     created_at?: string
-                    job_id?: string
+                    job_id?: string | null
                     amount?: number
                     description?: string | null
                     stripe_payment_link?: string | null
                     stripe_session_id?: string | null
                     status?: string | null
                     payment_method?: string | null
+                    invoice_id?: string | null
                 }
             }
         }

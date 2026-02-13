@@ -60,6 +60,25 @@ class NotificationService {
             text: `Name: ${data.name}\nEmail: ${data.email}\nService: ${data.service_interest}\nMessage: ${data.message}`
         })
     }
+
+    async sendInvoice(email: string, invoiceId: string, customerName: string, amount: number) {
+        const magicLink = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/invoice/${invoiceId}`
+
+        return this.provider.sendEmail({
+            to: email,
+            subject: `Invoice #${invoiceId.slice(0, 8).toUpperCase()} from James-It`,
+            html: `
+        <h2>Hi ${customerName},</h2>
+        <p>A new invoice has been created for your recent services.</p>
+        <p><strong>Amount Due: $${amount.toFixed(2)}</strong></p>
+        <p>You can view the invoice details and make a payment securely at the following link:</p>
+        <p><a href="${magicLink}">${magicLink}</a></p>
+        <br/>
+        <p>Thanks,<br/>James</p>
+      `,
+            text: `Hi ${customerName}, a new invoice is ready. View it here: ${magicLink}`
+        })
+    }
 }
 
 export const notificationService = new NotificationService()
